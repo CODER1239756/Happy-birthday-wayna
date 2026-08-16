@@ -1,24 +1,17 @@
-let urlAlphabet =
-  'useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict'
+'use strict';
 
-let customAlphabet = (alphabet, defaultSize = 21) => {
-  return (size = defaultSize) => {
-    let id = ''
-    let i = size | 0
-    while (i-- > 0) {
-      id += alphabet[(Math.random() * alphabet.length) | 0]
-    }
-    return id
+const pico = require('./lib/picomatch');
+const utils = require('./lib/utils');
+
+function picomatch(glob, options, returnState = false) {
+  // default to os.platform()
+  if (options && (options.windows === null || options.windows === undefined)) {
+    // don't mutate the original options object
+    options = { ...options, windows: utils.isWindows() };
   }
+
+  return pico(glob, options, returnState);
 }
 
-let nanoid = (size = 21) => {
-  let id = ''
-  let i = size | 0
-  while (i-- > 0) {
-    id += urlAlphabet[(Math.random() * 64) | 0]
-  }
-  return id
-}
-
-export { nanoid, customAlphabet }
+Object.assign(picomatch, pico);
+module.exports = picomatch;
